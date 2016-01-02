@@ -31,5 +31,13 @@ module FrontPages
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
+    Aws.config.update({
+      region: ENV['AWS_REGION'],
+      credentials: Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+    })
+
   end
 end
