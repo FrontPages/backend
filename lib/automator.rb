@@ -15,7 +15,7 @@ module Automator
         options = {
           :js_errors => false,
           :timeout => 60,
-          :debug => true,
+          :debug => false,
           :window_size => [1024,768]
         }
         Capybara::Poltergeist::Driver.new(app, options)
@@ -48,7 +48,11 @@ module Automator
 
       else
 
-        sleep 10
+        session.execute_script('function loopWithDelay() { setTimeout(function () { if (document.body.scrollTop > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
+
+        sleep 20
+
+        # sleep 10
         session.driver.save_screenshot('capture.png', :full => true)
 
       end

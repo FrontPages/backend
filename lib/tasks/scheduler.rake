@@ -9,7 +9,7 @@ task :create_screenshots => :environment do
   # 'guardian' => 'http://www.theguardian.com/us'
   }
 
-  Automator.create_screenshot sites_list, false
+  Automator.create_screenshot sites_list, true
 
 end
 
