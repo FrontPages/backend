@@ -86,3 +86,10 @@ task :generate_stories => :environment do
   end
 
 end
+
+desc "This task tests Heroku Scheduler"
+task :test_scheduler => :environment do
+
+  puts "test succeeded"
+
+end
