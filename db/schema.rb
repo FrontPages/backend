@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20160102054451) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "headlines", force: :cascade do |t|
     t.string   "title"
     t.string   "url"
@@ -22,8 +25,8 @@ ActiveRecord::Schema.define(version: 20160102054451) do
     t.integer  "story_id"
   end
 
-  add_index "headlines", ["snapshot_id"], name: "index_headlines_on_snapshot_id"
-  add_index "headlines", ["story_id"], name: "index_headlines_on_story_id"
+  add_index "headlines", ["snapshot_id"], name: "index_headlines_on_snapshot_id", using: :btree
+  add_index "headlines", ["story_id"], name: "index_headlines_on_story_id", using: :btree
 
   create_table "sites", force: :cascade do |t|
     t.string   "name"
@@ -47,7 +50,7 @@ ActiveRecord::Schema.define(version: 20160102054451) do
     t.text     "searchable_headlines"
   end
 
-  add_index "snapshots", ["site_id"], name: "index_snapshots_on_site_id"
+  add_index "snapshots", ["site_id"], name: "index_snapshots_on_site_id", using: :btree
 
   create_table "stories", force: :cascade do |t|
     t.string   "url"
@@ -56,6 +59,7 @@ ActiveRecord::Schema.define(version: 20160102054451) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "stories", ["site_id"], name: "index_stories_on_site_id"
+  add_index "stories", ["site_id"], name: "index_stories_on_site_id", using: :btree
 
+  add_foreign_key "stories", "sites"
 end
