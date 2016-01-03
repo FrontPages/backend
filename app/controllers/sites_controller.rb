@@ -6,7 +6,7 @@ class SitesController < ApplicationController
 
 	def index
 
-		@sites = Site.all
+		@sites = Site.all.order(name: :asc)
 		render json: {sites: @sites}
 
 	end

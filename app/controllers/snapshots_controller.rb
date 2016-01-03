@@ -6,7 +6,7 @@ class SnapshotsController < ApplicationController
 
 	def index
 
-		@snapshots = Snapshot.all
+		@snapshots = Snapshot.all.order(created_at: :desc)
 		render json: {snapshots: @snapshots}
 
 	end
