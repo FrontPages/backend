@@ -223,7 +223,7 @@ module Automator
     sleep 20
 
     begin
-      session.execute_script('x = document.querySelector(\'*[id^="cxWidget"]\'); x.remove();')
+      session.execute_script('x = document.querySelectorAll(\'*[id^="cxWidget"]\')[1]; x.remove();')
     rescue
     end
 
