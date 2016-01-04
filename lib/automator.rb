@@ -223,9 +223,7 @@ module Automator
     sleep 20
 
     begin
-      sleep 5
-      session.find('.close-btn', :visible => false).find('img[title="Close"]', :visible => false).trigger('click')
-      sleep 5
+      session.execute_script('x = document.querySelector(\'*[id^="cxWidget"]\'); x.remove();')
     rescue
     end
 
