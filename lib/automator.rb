@@ -54,6 +54,13 @@ module Automator
 
         # sleep 10
         session.driver.save_screenshot('capture.png', :full => true)
+        begin
+          session.find('.close-btn', :visible => false).trigger('click')
+        rescue
+        end
+        sleep 10
+        session.driver.save_screenshot('capture2.png', :full => true)
+        # File.open( "output.html", "w+" ) { |f| f.write session.html }
 
       end
 
@@ -209,6 +216,12 @@ module Automator
       rescue
       end
 
+    end
+
+    begin
+      session.find('.close-btn', :visible => false).trigger('click')
+      sleep 5
+    rescue
     end
 
     session.execute_script('function loopWithDelay() { setTimeout(function () { if (document.body.scrollTop > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
