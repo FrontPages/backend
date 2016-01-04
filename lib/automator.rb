@@ -219,6 +219,7 @@ module Automator
     end
 
     begin
+      sleep 5
       session.find('.close-btn', :visible => false).trigger('click')
       sleep 5
     rescue
