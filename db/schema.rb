@@ -11,14 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160102054451) do
+ActiveRecord::Schema.define(version: 20160105031622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "headlines", force: :cascade do |t|
-    t.string   "title"
-    t.string   "url"
+    t.string   "title",       limit: 255
+    t.string   "url",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "snapshot_id"
@@ -29,16 +29,17 @@ ActiveRecord::Schema.define(version: 20160102054451) do
   add_index "headlines", ["story_id"], name: "index_headlines_on_story_id", using: :btree
 
   create_table "sites", force: :cascade do |t|
-    t.string   "name"
-    t.string   "url"
-    t.string   "selector"
-    t.string   "shortcode"
+    t.string   "name",       limit: 255
+    t.string   "url",        limit: 255
+    t.string   "selector",   limit: 255
+    t.string   "shortcode",  limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "script"
   end
 
   create_table "snapshots", force: :cascade do |t|
-    t.string   "filename"
+    t.string   "filename",             limit: 255
     t.integer  "height"
     t.integer  "width"
     t.integer  "size"
@@ -46,7 +47,7 @@ ActiveRecord::Schema.define(version: 20160102054451) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "thumbnail"
-    t.boolean  "keyframe",             default: true
+    t.boolean  "keyframe",                         default: true
     t.text     "searchable_headlines"
   end
 
