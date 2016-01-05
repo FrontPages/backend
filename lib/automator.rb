@@ -34,7 +34,7 @@ module Automator
 
         images_arr = []
         images_arr << Base64.decode64(session.driver.render_base64(:png, full: true))
-        images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,300,Magick::NorthWestGravity).to_blob
+        images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob
 
         images_arr.each_with_index do |image, index|
 
@@ -231,7 +231,7 @@ module Automator
 
     images_arr = []
     images_arr << Base64.decode64(session.driver.render_base64(:png, full: true))
-    images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,300,Magick::NorthWestGravity).to_blob if thumbnail
+    images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob if thumbnail
 
     images_arr.each_with_index do |image, index|
 
@@ -254,7 +254,7 @@ module Automator
   def self.create_thumbnail image, to_file_too = false
 
     source = Magick::Image.read(image).first
-    source = source.resize_to_fill(300,300,Magick::NorthWestGravity)
+    source = source.resize_to_fill(300,600,Magick::NorthWestGravity)
 
     source.write("capture_thumb.png") if to_file_too
 
