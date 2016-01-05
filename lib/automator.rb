@@ -222,7 +222,7 @@ module Automator
 
     session.execute_script('function loopWithDelay() { setTimeout(function () { if (document.body.scrollTop > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
 
-    sleep 20
+    sleep rand(17..24)
 
     begin
       session.execute_script(site.script) unless site.script.nil?
