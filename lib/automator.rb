@@ -13,9 +13,9 @@ module Automator
 
       Capybara.register_driver :poltergeist do |app|
         options = {
-          :js_errors => false,
+          :js_errors => true,
           :timeout => 60,
-          :debug => false,
+          :debug => true,
           :window_size => [1024,768]
         }
         Capybara::Poltergeist::Driver.new(app, options)
@@ -54,10 +54,12 @@ module Automator
 
         # sleep 10
         session.driver.save_screenshot('capture.png', :full => true)
-        begin
-          session.find('.close-btn', :visible => false).trigger('click')
-        rescue
-        end
+        # begin
+          script_text = 'x = document.querySelectorAll(\'*[id^="cxWidget"]\')[1]; x.remove();'
+          session.execute_script(script_text)
+          session.execute_script('x = document.querySelectorAll(\'*[id^="cxWidget"]\')[1]; x.remove();')
+        # rescue
+        # end
         sleep 10
         session.driver.save_screenshot('capture2.png', :full => true)
         # File.open( "output.html", "w+" ) { |f| f.write session.html }
@@ -223,7 +225,7 @@ module Automator
     sleep 20
 
     begin
-      session.execute_script('x = document.querySelectorAll(\'*[id^="cxWidget"]\')[1]; x.remove();')
+      session.execute_script(site.script) unless site.script.nil?
     rescue
     end
 
