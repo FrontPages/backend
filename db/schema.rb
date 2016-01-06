@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160105031622) do
+ActiveRecord::Schema.define(version: 20160106032737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20160105031622) do
     t.text     "searchable_headlines"
   end
 
+  add_index "snapshots", ["created_at"], name: "index_snapshots_on_created_at", order: {"created_at"=>:desc}, where: "(keyframe = true)", using: :btree
   add_index "snapshots", ["site_id"], name: "index_snapshots_on_site_id", using: :btree
 
   create_table "stories", force: :cascade do |t|
