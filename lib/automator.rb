@@ -185,6 +185,34 @@ module Automator
     session.visit site.url       # go to a web page (first request will take a bit)
 
     snapshot_name = "#{site.shortcode}-#{ Time.now.strftime("%Y-%m-%d-%H-%M-%z") }.png"
+
+    session.execute_script('function loopWithDelay() { setTimeout(function () { if (document.body.scrollTop > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
+
+    sleep rand(17..24)
+
+    begin
+      session.execute_script(site.script) unless site.script.nil?
+    rescue
+    end
+
+    images_arr = []
+    images_arr << Base64.decode64(session.driver.render_base64(:png, full: true))
+    images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob if thumbnail
+
+    images_arr.each_with_index do |image, index|
+
+      s3 = Aws::S3::Resource.new
+      bucket = s3.bucket(ENV['S3_BUCKET'])
+      if index == 0
+        obj = bucket.object(snapshot_name)
+      else
+        obj = bucket.object(("thumb-" + snapshot_name))
+      end
+      obj.put(body: image)
+      obj.etag
+
+    end
+
     if thumbnail
       new_snapshot = Snapshot.new :filename => snapshot_name, :thumbnail => ("thumb-" + snapshot_name), :site => site
     else
@@ -217,33 +245,6 @@ module Automator
 
       rescue
       end
-
-    end
-
-    session.execute_script('function loopWithDelay() { setTimeout(function () { if (document.body.scrollTop > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
-
-    sleep rand(17..24)
-
-    begin
-      session.execute_script(site.script) unless site.script.nil?
-    rescue
-    end
-
-    images_arr = []
-    images_arr << Base64.decode64(session.driver.render_base64(:png, full: true))
-    images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob if thumbnail
-
-    images_arr.each_with_index do |image, index|
-
-      s3 = Aws::S3::Resource.new
-      bucket = s3.bucket(ENV['S3_BUCKET'])
-      if index == 0
-        obj = bucket.object(snapshot_name)
-      else
-        obj = bucket.object(("thumb-" + snapshot_name))
-      end
-      obj.put(body: image)
-      obj.etag
 
     end
 
