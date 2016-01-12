@@ -39,7 +39,7 @@ class StoriesController < ApplicationController
       join (select distinct on (url) url, title from headlines where created_at >= NOW() - '5 days'::INTERVAL order by url, created_at desc) t2
       on t1.url = t2.url order by t1.cnt desc"
 
-      @stories = ActiveRecord::Base.connection.execute(trending_query)
+      @stories = ActiveRecord::Base.connection.execute(impact_query)
   		render json: {stories: @stories}
 
   end
