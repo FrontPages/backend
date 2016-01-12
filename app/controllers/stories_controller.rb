@@ -6,8 +6,16 @@ class StoriesController < ApplicationController
 
 	def trending
 
+    if params[:threshold].present? && params[:threshold].to_i > 2
+      threshold = params[:threshold]
+    elsif params[:threshold].present?
+      threshold = "3"
+    else
+      threshold = "5"
+    end
+
     trending_query = "select t1.url, t2.title, t1.cnt
-      from (select url, count(distinct title) cnt from headlines where created_at >= NOW() - '1 day'::INTERVAL group by url having count(distinct title) >= 5) t1
+      from (select url, count(distinct title) cnt from headlines where created_at >= NOW() - '1 day'::INTERVAL group by url having count(distinct title) >= #{threshold}) t1
       join (select distinct on (url) url, title from headlines where created_at >= NOW() - '1 day'::INTERVAL order by url, created_at desc) t2
       on t1.url = t2.url order by t1.cnt desc"
 
