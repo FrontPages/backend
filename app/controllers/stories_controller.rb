@@ -14,10 +14,10 @@ class StoriesController < ApplicationController
       threshold = "5"
     end
 
-    trending_query = "select t1.url, t2.title, t1.cnt
-      from (select url, count(distinct title) cnt from headlines where created_at >= NOW() - '1 day'::INTERVAL group by url having count(distinct title) >= #{threshold}) t1
+    trending_query = "select t1.url, t2.title, t1.count
+      from (select url, count(distinct title) count from headlines where created_at >= NOW() - '1 day'::INTERVAL group by url having count(distinct title) >= #{threshold}) t1
       join (select distinct on (url) url, title from headlines where created_at >= NOW() - '1 day'::INTERVAL order by url, created_at desc) t2
-      on t1.url = t2.url order by t1.cnt desc"
+      on t1.url = t2.url order by t1.count desc"
 
 		@stories = ActiveRecord::Base.connection.execute(trending_query)
 		render json: {stories: @stories}
@@ -34,10 +34,10 @@ class StoriesController < ApplicationController
       threshold = "100"
     end
 
-    impact_query = "select t1.url, t2.title, t1.cnt
-      from (select url, count(*) cnt from headlines where created_at >= NOW() - '5 days'::INTERVAL group by url having count(*) >= #{threshold}) t1
+    impact_query = "select t1.url, t2.title, t1.count
+      from (select url, count(*) count from headlines where created_at >= NOW() - '5 days'::INTERVAL group by url having count(*) >= #{threshold}) t1
       join (select distinct on (url) url, title from headlines where created_at >= NOW() - '5 days'::INTERVAL order by url, created_at desc) t2
-      on t1.url = t2.url order by t1.cnt desc"
+      on t1.url = t2.url order by t1.count desc"
 
       @stories = ActiveRecord::Base.connection.execute(impact_query)
   		render json: {stories: @stories}
