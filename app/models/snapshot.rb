@@ -11,11 +11,4 @@ class Snapshot < ActiveRecord::Base
       ENV['S3_FILE_PREFIX'] + filename.gsub("+", "%2B")
     end
   end
-
-  def as_json(options={})
-      super(:methods => [:file_path],
-            :except => [:filename, :thumbnail]
-      )
-  end
-
 end

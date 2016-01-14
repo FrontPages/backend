@@ -48,6 +48,7 @@ group :production do
   gem 'rails_12factor'
 end
 
+gem 'active_model_serializers'
 gem 'aws-sdk'
 gem 'pg'
 gem 'poltergeist'
