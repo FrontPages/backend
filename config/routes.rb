@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :snapshots, :only => [:index]
-  resources :sites, :only => [:index]
-  get 'trending', to: 'stories#trending'
-  get 'impact', to: 'stories#impact'
+  get "impact", to: "stories#impact"
+  get "sites", to: "sites#index"
+  get "snapshots", to: "snapshots#index"
+  get "snapshots/:id/headlines", to: "headlines#index"
+  get "trending", to: "stories#trending"
 end
