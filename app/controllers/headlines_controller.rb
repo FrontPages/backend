@@ -3,7 +3,7 @@ class HeadlinesController < ApplicationController
   respond_to :json
 
   def index
-    headlines = Headline.where(snapshot_id: params[:snapshot_id])
+    headlines = Headline.where(snapshot_id: params[:snapshot_id]).order(id: :asc)
     render json: headlines, each_serializer: HeadlineSerializer
   end
 end
