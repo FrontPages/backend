@@ -11,10 +11,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160113141156) do
+ActiveRecord::Schema.define(version: 20160203162924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "collection_snapshots", force: :cascade do |t|
+    t.integer  "collection_id"
+    t.integer  "snapshot_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "collection_snapshots", ["collection_id"], name: "index_collection_snapshots_on_collection_id", using: :btree
+  add_index "collection_snapshots", ["snapshot_id"], name: "index_collection_snapshots_on_snapshot_id", using: :btree
+
+  create_table "collections", force: :cascade do |t|
+    t.string   "title"
+    t.string   "subtitle"
+    t.string   "permalink"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "headlines", force: :cascade do |t|
     t.string   "title",       limit: 255
@@ -64,5 +82,7 @@ ActiveRecord::Schema.define(version: 20160113141156) do
 
   add_index "stories", ["site_id"], name: "index_stories_on_site_id", using: :btree
 
+  add_foreign_key "collection_snapshots", "collections"
+  add_foreign_key "collection_snapshots", "snapshots"
   add_foreign_key "stories", "sites"
 end
