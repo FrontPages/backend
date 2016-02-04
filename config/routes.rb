@@ -4,4 +4,7 @@ Rails.application.routes.draw do
   get "snapshots", to: "snapshots#index"
   get "headlines", to: "headlines#index"
   get "trending", to: "stories#trending"
+
+  resources :collections, only: [:index, :show]
+
 end
