@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   get "trending", to: "stories#trending"
 
   resources :collections, only: [:index, :create]
-  get 'collections/:permalink', to: 'collections#show'
+  get "collections/:permalink", to: "collections#show"
+
+  get "snapshots/search", to: "snapshots#search"
 
 end
