@@ -51,6 +51,7 @@ end
 gem 'active_model_serializers'
 gem 'aws-sdk'
 gem 'pg'
+gem 'pg_search'
 gem 'poltergeist'
 gem 'responders', '~> 2.0'
 gem 'rmagick'
