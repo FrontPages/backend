@@ -8,8 +8,11 @@ class SnapshotsController < ApplicationController
 	end
 
   def search
-    # snapshots = Snapshot.includes(:headlines).where("headlines.title ilike ?", "%#{params[:query]}%").references(:headlines).order(created_at: :desc)
-    snapshots = Snapshot.where("id in (?)", Headline.select(:snapshot_id).search("#{params[:query]}")).order(created_at: :desc)
+    if params.has_key?(:no_index)
+      snapshots = Snapshot.includes(:headlines).where("headlines.title ilike ?", "%#{params[:query]}%").references(:headlines).order(created_at: :desc)
+    else
+      snapshots = Snapshot.where("id in (?)", Headline.select(:snapshot_id).search("#{params[:query]}")).order(created_at: :desc)
+    end
     render json: snapshots, each_serializer: SnapshotSerializer
   end
 
