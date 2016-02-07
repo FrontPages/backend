@@ -375,6 +375,13 @@ CREATE INDEX index_headlines_on_story_id ON headlines USING btree (story_id);
 
 
 --
+-- Name: index_on_title; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_on_title ON headlines USING gin (to_tsvector('english'::regconfig, COALESCE((title)::text, ''::text)));
+
+
+--
 -- Name: index_snapshots_on_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -393,13 +400,6 @@ CREATE INDEX index_snapshots_on_site_id ON snapshots USING btree (site_id);
 --
 
 CREATE INDEX index_stories_on_site_id ON stories USING btree (site_id);
-
-
---
--- Name: index_title; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_title ON headlines USING gin (to_tsvector('english'::regconfig, (title)::text));
 
 
 --
@@ -468,4 +468,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160203162924');
 INSERT INTO schema_migrations (version) VALUES ('20160204193416');
 
 INSERT INTO schema_migrations (version) VALUES ('20160206223500');
+
+INSERT INTO schema_migrations (version) VALUES ('20160207165941');
 
