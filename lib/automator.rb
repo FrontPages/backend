@@ -195,14 +195,15 @@ module Automator
     rescue
     end
 
+    s3 = Aws::S3::Resource.new
+    bucket = s3.bucket(ENV['S3_BUCKET'])
+
     images_arr = []
     images_arr << Base64.decode64(session.driver.render_base64(:png, full: true))
     images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob if thumbnail
 
     images_arr.each_with_index do |image, index|
 
-      s3 = Aws::S3::Resource.new
-      bucket = s3.bucket(ENV['S3_BUCKET'])
       if index == 0
         obj = bucket.object(snapshot_name)
       else
@@ -212,6 +213,10 @@ module Automator
       obj.etag
 
     end
+
+    obj = bucket.object(snapshot_name[0..(snapshot_name.length - 5)] + ".html")
+    obj.put(body: session.html)
+    obj.etag
 
     if thumbnail
       new_snapshot = Snapshot.new :filename => snapshot_name, :thumbnail => ("thumb-" + snapshot_name), :site => site
@@ -259,6 +264,38 @@ module Automator
 
     source.write("capture_thumb.png") if to_file_too
 
+
+  end
+
+  def self.save_html site
+
+    Capybara.javascript_driver = :poltergeist
+    Capybara.current_driver = :poltergeist
+
+    Capybara.register_driver :poltergeist do |app|
+      options = {
+        :js_errors => false,
+        :timeout => 60,
+        :debug => true,
+        :window_size => [1024,768]
+      }
+      Capybara::Poltergeist::Driver.new(app, options)
+    end
+
+    session = Capybara::Session.new(:poltergeist)
+
+    session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" }
+    session.visit site      # go to a web page (first request will take a bit)
+
+    # print session.driver.html
+    page_content = session.html
+    File.open( "output.html", "w+" ) { |f| f.write page_content }
+
+    s3 = Aws::S3::Resource.new
+    bucket = s3.bucket(ENV['S3_BUCKET'])
+    obj = bucket.object("test_page.html")
+    obj.put(body: page_content)
+    obj.etag
 
   end
 

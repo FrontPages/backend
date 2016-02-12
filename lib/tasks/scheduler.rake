@@ -93,3 +93,12 @@ task :test_scheduler => :environment do
   puts "test succeeded"
 
 end
+
+desc "This task tests a method for saving HTML snapshots"
+task :save_html => :environment do
+
+  site = 'http://www.wsj.com/'
+
+  Automator.save_html site
+
+end
