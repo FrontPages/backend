@@ -1,7 +1,32 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
+def headlines
+  (1..10).map do |n|
+    Headline.new({
+      title: "Title #{n}",
+      url: "http://example.com/headline-#{n}"
+    })
+  end
+end
+
+def snapshots
+  (1..10).map do |n|
+    Snapshot.new({
+      created_at: n.hours.ago,
+      thumbnail: "http://example.com/thumbnail-#{n}.jpg",
+      filename: "http://example.com/filename-#{n}.jpg",
+      headlines: headlines
+    })
+  end
+end
+
+def sites
+  (1..10).map do |n|
+    Site.new({
+      name: "Site #{n}",
+      shortcode: "s#{n}",
+      url: "http://#{n}.example.com",
+      snapshots: snapshots
+    })
+  end
+end
+
+sites.each(&:save)
