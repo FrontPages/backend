@@ -2,10 +2,10 @@ desc "This task takes screenshots of newspaper front pages and saves them to S3"
 task :create_screenshots => :environment do
 
   sites_list = {
-  #  'wapo' => 'https://www.washingtonpost.com/',
+    'wapo' => 'https://www.washingtonpost.com/'
   #  'nyt' => 'http://www.nytimes.com/'
   #  'usatoday' => 'http://www.usatoday.com/',
-  'wsj' => 'http://www.wsj.com/'
+  # 'wsj' => 'http://www.wsj.com/',
   # 'guardian' => 'http://www.theguardian.com/us'
   }
 
@@ -84,13 +84,6 @@ task :generate_stories => :environment do
 
     end
   end
-
-end
-
-desc "This task tests Heroku Scheduler"
-task :test_scheduler => :environment do
-
-  puts "test succeeded"
 
 end
 
