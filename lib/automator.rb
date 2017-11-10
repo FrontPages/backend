@@ -32,6 +32,8 @@ module Automator
     rescue
     end
 
+    puts "success"
+
     # These two lines seem to allow the page more time to load (on WaPo, at least), which results in the actual screenshot looking right instead of having a bunch of empty boxes
     image_throwaway = nil
     image_throwaway = Base64.decode64(driver.screenshot_as(:base64)) if driver.screenshot_as(:base64).nil? == false
