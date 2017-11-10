@@ -1,8 +1,105 @@
 module Automator
 
   require 'capybara/poltergeist'
+  require 'selenium-webdriver'
   require 'net/http'
   require 'rmagick'
+
+  def self.aggregate_headlines_and_take_snapshot site, thumbnail = false
+
+    options = Selenium::WebDriver::Chrome::Options.new(args: ['headless'])
+
+    # session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" }
+
+    driver = Selenium::WebDriver.for(:chrome, options: options)
+    driver.get(site.url)
+    puts driver.title
+
+    driver.execute_script('function loopWithDelay() { setTimeout(function () { var scroll_depth = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop); if (scroll_depth > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
+
+    width  = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth, 924);")
+    height = driver.execute_script("return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight, 668);")
+
+    # sleep rand(17..24)
+
+    # Add some pixels on top of the calculated dimensions for good
+    # measure to make the scroll bars disappear
+    #
+    driver.manage.window.resize_to(width+100, height+100)
+
+    begin
+      driver.execute_script(site.script) unless site.script.nil?
+    rescue
+    end
+
+    # These two lines seem to allow the page more time to load (on WaPo, at least), which results in the actual screenshot looking right instead of having a bunch of empty boxes
+    image_throwaway = nil
+    image_throwaway = Base64.decode64(driver.screenshot_as(:base64))
+
+    snapshot_name = "#{site.shortcode}-#{ Time.now.strftime("%Y-%m-%d-%H-%M-%z") }.png"
+    # driver.save_screenshot(snapshot_name)
+
+    s3 = Aws::S3::Resource.new
+    bucket = s3.bucket(ENV['S3_BUCKET'])
+
+    images_arr = []
+    images_arr << Base64.decode64(driver.screenshot_as(:base64))
+    images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob if thumbnail
+
+    images_arr.each_with_index do |image, index|
+
+      if index == 0
+        obj = bucket.object(snapshot_name)
+      else
+        obj = bucket.object(("thumb-" + snapshot_name))
+      end
+      obj.put(body: image)
+      obj.etag
+
+    end
+
+    obj = bucket.object(snapshot_name[0..(snapshot_name.length - 5)] + ".html")
+    obj.put(body: driver.page_source)
+    obj.etag
+
+    if thumbnail
+      new_snapshot = Snapshot.new :filename => snapshot_name, :thumbnail => ("thumb-" + snapshot_name), :site => site
+    else
+      new_snapshot = Snapshot.new :filename => snapshot_name, :site => site
+    end
+    new_snapshot.save
+
+    headlines = driver.find_elements(:css, "#{site.selector}")
+
+    headlines.each do |headline|
+
+      begin
+
+        # if Story doesn't exist, create it before creating the Headline
+        if Story.where(:url => headline[:href]).count == 0
+
+          new_story = Story.new :url => headline[:href], :site => site
+          new_story.save
+
+          new_headline = Headline.new :title => headline.text, :url => headline[:href], :snapshot => new_snapshot, :story => new_story
+          new_headline.save
+
+        # if Story does exist, link it to the new Headline when it's created
+        else
+
+          new_headline = Headline.new :title => headline.text, :url => headline[:href], :snapshot => new_snapshot, :story => Story.where(:url => headline[:href]).first
+          new_headline.save
+
+        end
+
+      rescue
+      end
+
+    end
+
+    driver.quit
+
+  end
 
   def self.create_screenshot sites_list, save_to_s3 = true
 
@@ -93,104 +190,6 @@ module Automator
 
     headlines.each do |headline|
       puts headline.text
-    end
-
-    session.driver.quit
-
-  end
-
-  def self.aggregate_headlines_and_take_snapshot site, thumbnail = false
-
-    Capybara.javascript_driver = :poltergeist
-    Capybara.current_driver = :poltergeist
-
-    Capybara.register_driver :poltergeist do |app|
-      options = {
-        :js_errors => false,
-        :timeout => 60,
-        :debug => false,
-        :window_size => [1024,768]
-      }
-      Capybara::Poltergeist::Driver.new(app, options)
-    end
-
-    session = Capybara::Session.new(:poltergeist)
-
-    session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" }
-    session.visit site.url       # go to a web page (first request will take a bit)
-
-    snapshot_name = "#{site.shortcode}-#{ Time.now.strftime("%Y-%m-%d-%H-%M-%z") }.png"
-
-    session.execute_script('function loopWithDelay() { setTimeout(function () { if (document.body.scrollTop > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
-
-    sleep rand(17..24)
-
-    begin
-      session.execute_script(site.script) unless site.script.nil?
-    rescue
-    end
-
-    s3 = Aws::S3::Resource.new
-    bucket = s3.bucket(ENV['S3_BUCKET'])
-
-    # These two lines seem to allow the page more time to load (on WaPo, at least), which results in the actual screenshot looking right instead of
-    # having a bunch of empty boxes
-    image_throwaway = nil
-    image_throwaway = Base64.decode64(session.driver.render_base64(:png, full: true))
-
-    images_arr = []
-    images_arr << Base64.decode64(session.driver.render_base64(:png, full: true))
-    images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob if thumbnail
-
-    images_arr.each_with_index do |image, index|
-
-      if index == 0
-        obj = bucket.object(snapshot_name)
-      else
-        obj = bucket.object(("thumb-" + snapshot_name))
-      end
-      obj.put(body: image)
-      obj.etag
-
-    end
-
-    obj = bucket.object(snapshot_name[0..(snapshot_name.length - 5)] + ".html")
-    obj.put(body: session.html)
-    obj.etag
-
-    if thumbnail
-      new_snapshot = Snapshot.new :filename => snapshot_name, :thumbnail => ("thumb-" + snapshot_name), :site => site
-    else
-      new_snapshot = Snapshot.new :filename => snapshot_name, :site => site
-    end
-    new_snapshot.save
-
-    headlines = session.all(:css, "#{site.selector}")
-
-    headlines.each do |headline|
-
-      begin
-
-        # if Story doesn't exist, create it before creating the Headline
-        if Story.where(:url => headline[:href]).count == 0
-
-          new_story = Story.new :url => headline[:href], :site => site
-          new_story.save
-
-          new_headline = Headline.new :title => headline.text, :url => headline[:href], :snapshot => new_snapshot, :story => new_story
-          new_headline.save
-
-        # if Story does exist, link it to the new Headline when it's created
-        else
-
-          new_headline = Headline.new :title => headline.text, :url => headline[:href], :snapshot => new_snapshot, :story => Story.where(:url => headline[:href]).first
-          new_headline.save
-
-        end
-
-      rescue
-      end
-
     end
 
     session.driver.quit

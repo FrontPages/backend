@@ -55,3 +55,5 @@ gem 'pg_search'
 gem 'poltergeist'
 gem 'responders', '~> 2.0'
 gem 'rmagick'
+
+gem 'selenium-webdriver'

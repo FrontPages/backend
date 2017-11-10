@@ -1,3 +1,14 @@
+desc "This is the live-in-production task that saves all headlines and takes a snapshot on all the site home pages"
+task :save_headlines_and_take_snapshot => :environment do
+
+  sites = Site.all
+
+  sites.each do |site|
+    Automator.aggregate_headlines_and_take_snapshot site, true
+  end
+
+end
+
 desc "This task takes screenshots of newspaper front pages and saves them to S3"
 task :create_screenshots => :environment do
 
@@ -18,17 +29,6 @@ task :get_nyt_headlines => :environment do
   # Automator.aggregate_headlines 'http://www.nytimes.com', '.story-heading'
   # Automator.aggregate_headlines 'http://www.wsj.com/', 'a.wsj-headline-link'
   Automator.aggregate_headlines 'http://www.theguardian.com/', 'a[data-link-name="article"]'
-end
-
-desc "This task saves all headlines and takes a snapshot on all the site home pages"
-task :save_headlines_and_take_snapshot => :environment do
-
-  sites = Site.all
-
-  sites.each do |site|
-    Automator.aggregate_headlines_and_take_snapshot site, true
-  end
-
 end
 
 desc "This task tests thumbnail creation"
