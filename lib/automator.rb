@@ -11,7 +11,7 @@ module Automator
 
     # session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" }
 
-    driver = Selenium::WebDriver.for(:chrome, options: options)
+    driver = Selenium::WebDriver.for(:chrome, options: options, :prefs => {:password_manager_enable => false, :credentials_enable_service => false}, :switches => ["disable-infobars", "no-sandbox"])
     driver.get(site.url)
     puts driver.title
 
