@@ -35,8 +35,8 @@ module Automator
     puts "success"
 
     # These two lines seem to allow the page more time to load (on WaPo, at least), which results in the actual screenshot looking right instead of having a bunch of empty boxes
-    image_throwaway = nil
-    image_throwaway = driver.screenshot_as(:png) if driver.screenshot_as(:png).nil? == false
+    # image_throwaway = nil
+    # image_throwaway = driver.screenshot_as(:png) if driver.screenshot_as(:png).nil? == false
 
     snapshot_name = "#{site.shortcode}-#{ Time.now.strftime("%Y-%m-%d-%H-%M-%z") }.png"
     # driver.save_screenshot(snapshot_name)
