@@ -1,7 +1,7 @@
 desc "This is the live-in-production task that saves all headlines and takes a snapshot on all the site home pages"
 task :save_headlines_and_take_snapshot => :environment do
 
-  sites = Site.all
+  sites = Site.all.reverse_order
 
   sites.each do |site|
     Automator.aggregate_headlines_and_take_snapshot site, true
