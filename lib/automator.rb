@@ -15,7 +15,7 @@ module Automator
     driver.get(site.url)
     puts driver.title
 
-    # driver.execute_script('function loopWithDelay() { setTimeout(function () { var scroll_depth = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop); if (scroll_depth > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
+    driver.execute_script('function loopWithDelay() { setTimeout(function () { var scroll_depth = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop); if (scroll_depth > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
 
     width  = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth, 924);")
     height = driver.execute_script("return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight, 668);")
@@ -25,7 +25,7 @@ module Automator
     # Add some pixels on top of the calculated dimensions for good
     # measure to make the scroll bars disappear
     #
-    driver.manage.window.resize_to(width, height)
+    driver.manage.window.resize_to(width+100, height+100)
 
     begin
       driver.execute_script(site.script) unless site.script.nil?
@@ -37,6 +37,8 @@ module Automator
     # These two lines seem to allow the page more time to load (on WaPo, at least), which results in the actual screenshot looking right instead of having a bunch of empty boxes
     # image_throwaway = nil
     # image_throwaway = driver.screenshot_as(:png) if driver.screenshot_as(:png).nil? == false
+
+    sleep rand(17..24)
 
     snapshot_name = "#{site.shortcode}-#{ Time.now.strftime("%Y-%m-%d-%H-%M-%z") }.png"
     # driver.save_screenshot(snapshot_name)
