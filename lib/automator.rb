@@ -49,7 +49,7 @@ module Automator
     bucket = s3.bucket(ENV['S3_BUCKET'])
 
     images_arr = []
-    images_arr << driver.screenshot_as(:png)
+    images_arr << Base64.decode64(driver.screenshot_as(:base64))
     images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob if thumbnail
 
     images_arr.each_with_index do |image, index|
