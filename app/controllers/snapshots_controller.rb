@@ -3,7 +3,11 @@ class SnapshotsController < ApplicationController
 	respond_to :json
 
 	def index
-		snapshots = Snapshot.where(keyframe: true, site_id: params[:site_id]).order(created_at: :desc)
+		if params.has_key?(:limit)
+			snapshots = Snapshot.where(keyframe: true, site_id: params[:site_id]).order(created_at: :desc).limit(params[:limit].to_i)
+		else
+			snapshots = Snapshot.where(keyframe: true, site_id: params[:site_id]).order(created_at: :desc)
+		end
 		render json: snapshots, each_serializer: SnapshotSerializer
 	end
 
