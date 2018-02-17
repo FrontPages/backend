@@ -2,12 +2,17 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.6.7
+-- Dumped by pg_dump version 10.2
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET row_security = off;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
@@ -30,7 +35,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: collection_snapshots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: collection_snapshots; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE collection_snapshots (
@@ -62,7 +67,7 @@ ALTER SEQUENCE collection_snapshots_id_seq OWNED BY collection_snapshots.id;
 
 
 --
--- Name: collections; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: collections; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE collections (
@@ -95,13 +100,13 @@ ALTER SEQUENCE collections_id_seq OWNED BY collections.id;
 
 
 --
--- Name: headlines; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: headlines; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE headlines (
     id integer NOT NULL,
-    title character varying(255),
-    url character varying(255),
+    title character varying,
+    url character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     snapshot_id integer,
@@ -129,24 +134,24 @@ ALTER SEQUENCE headlines_id_seq OWNED BY headlines.id;
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE schema_migrations (
-    version character varying(255) NOT NULL
+    version character varying NOT NULL
 );
 
 
 --
--- Name: sites; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: sites; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE sites (
     id integer NOT NULL,
-    name character varying(255),
-    url character varying(255),
-    selector character varying(255),
-    shortcode character varying(255),
+    name character varying,
+    url character varying,
+    selector character varying,
+    shortcode character varying,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     script text
@@ -173,12 +178,12 @@ ALTER SEQUENCE sites_id_seq OWNED BY sites.id;
 
 
 --
--- Name: snapshots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: snapshots; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE snapshots (
     id integer NOT NULL,
-    filename character varying(255),
+    filename character varying,
     height integer,
     width integer,
     size integer,
@@ -211,7 +216,7 @@ ALTER SEQUENCE snapshots_id_seq OWNED BY snapshots.id;
 
 
 --
--- Name: stories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: stories; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE stories (
@@ -243,49 +248,49 @@ ALTER SEQUENCE stories_id_seq OWNED BY stories.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: collection_snapshots id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY collection_snapshots ALTER COLUMN id SET DEFAULT nextval('collection_snapshots_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: collections id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY collections ALTER COLUMN id SET DEFAULT nextval('collections_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: headlines id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY headlines ALTER COLUMN id SET DEFAULT nextval('headlines_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: sites id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY sites ALTER COLUMN id SET DEFAULT nextval('sites_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: snapshots id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY snapshots ALTER COLUMN id SET DEFAULT nextval('snapshots_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: stories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY stories ALTER COLUMN id SET DEFAULT nextval('stories_id_seq'::regclass);
 
 
 --
--- Name: collection_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: collection_snapshots collection_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY collection_snapshots
@@ -293,7 +298,7 @@ ALTER TABLE ONLY collection_snapshots
 
 
 --
--- Name: collections_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: collections collections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY collections
@@ -301,7 +306,7 @@ ALTER TABLE ONLY collections
 
 
 --
--- Name: headlines_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: headlines headlines_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY headlines
@@ -309,7 +314,7 @@ ALTER TABLE ONLY headlines
 
 
 --
--- Name: sites_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: sites sites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY sites
@@ -317,7 +322,7 @@ ALTER TABLE ONLY sites
 
 
 --
--- Name: snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: snapshots snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY snapshots
@@ -325,7 +330,7 @@ ALTER TABLE ONLY snapshots
 
 
 --
--- Name: stories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: stories stories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY stories
@@ -333,84 +338,84 @@ ALTER TABLE ONLY stories
 
 
 --
--- Name: index_collection_snapshots_on_collection_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_collection_snapshots_on_collection_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_collection_snapshots_on_collection_id ON collection_snapshots USING btree (collection_id);
 
 
 --
--- Name: index_collection_snapshots_on_snapshot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_collection_snapshots_on_snapshot_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_collection_snapshots_on_snapshot_id ON collection_snapshots USING btree (snapshot_id);
 
 
 --
--- Name: index_collections_on_permalink; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_collections_on_permalink; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_collections_on_permalink ON collections USING btree (permalink);
 
 
 --
--- Name: index_headlines_on_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_headlines_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_headlines_on_created_at ON headlines USING btree (created_at);
 
 
 --
--- Name: index_headlines_on_snapshot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_headlines_on_snapshot_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_headlines_on_snapshot_id ON headlines USING btree (snapshot_id);
 
 
 --
--- Name: index_headlines_on_story_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_headlines_on_story_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_headlines_on_story_id ON headlines USING btree (story_id);
 
 
 --
--- Name: index_on_title; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_on_title; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_on_title ON headlines USING gin (to_tsvector('english'::regconfig, COALESCE((title)::text, ''::text)));
 
 
 --
--- Name: index_snapshots_on_created_at; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_snapshots_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_snapshots_on_created_at ON snapshots USING btree (created_at DESC) WHERE (keyframe = true);
 
 
 --
--- Name: index_snapshots_on_site_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_snapshots_on_site_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_snapshots_on_site_id ON snapshots USING btree (site_id);
 
 
 --
--- Name: index_stories_on_site_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_stories_on_site_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX index_stories_on_site_id ON stories USING btree (site_id);
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
 
 
 --
--- Name: fk_rails_19e4328475; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: stories fk_rails_19e4328475; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY stories
@@ -418,7 +423,7 @@ ALTER TABLE ONLY stories
 
 
 --
--- Name: fk_rails_2aa8ac3134; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: collection_snapshots fk_rails_2aa8ac3134; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY collection_snapshots
@@ -426,7 +431,7 @@ ALTER TABLE ONLY collection_snapshots
 
 
 --
--- Name: fk_rails_da6ee373ec; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: collection_snapshots fk_rails_da6ee373ec; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY collection_snapshots
@@ -437,7 +442,7 @@ ALTER TABLE ONLY collection_snapshots
 -- PostgreSQL database dump complete
 --
 
-SET search_path TO "$user",public;
+SET search_path TO "$user", public;
 
 INSERT INTO schema_migrations (version) VALUES ('20151228023949');
 

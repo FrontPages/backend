@@ -7,7 +7,7 @@ module Automator
 
   def self.aggregate_headlines_and_take_snapshot site, thumbnail = false
 
-    options = Selenium::WebDriver::Chrome::Options.new(args: ['headless'], binary: ENV['GOOGLE_CHROME_SHIM'])
+    options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'], binary: ENV['GOOGLE_CHROME_SHIM'])
 
     # session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" }
 
@@ -20,7 +20,7 @@ module Automator
 
     puts "height: " + height.to_s
 
-    # sleep rand(17..24)
+    sleep rand(17..24)
 
     # Add some pixels on top of the calculated dimensions for good
     # measure to make the scroll bars disappear
@@ -37,8 +37,8 @@ module Automator
     puts "success"
 
     # These two lines seem to allow the page more time to load (on WaPo, at least), which results in the actual screenshot looking right instead of having a bunch of empty boxes
-    # image_throwaway = nil
-    # image_throwaway = driver.screenshot_as(:png) if driver.screenshot_as(:png).nil? == false
+    image_throwaway = nil
+    image_throwaway = driver.screenshot_as(:png) if driver.screenshot_as(:png).nil? == false
 
     sleep rand(17..24)
 
