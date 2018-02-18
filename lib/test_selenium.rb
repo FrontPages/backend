@@ -6,7 +6,7 @@ require 'selenium-webdriver'
 options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'])
 
 driver = Selenium::WebDriver.for(:chrome, options: options)
-
+puts driver.execute_script('return navigator.userAgent')
 # driver.headers = { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" }
 
 driver.get('http://wsj.com/')
