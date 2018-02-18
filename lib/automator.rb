@@ -7,12 +7,13 @@ module Automator
 
   def self.aggregate_headlines_and_take_snapshot site, thumbnail = false
 
-    options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', "--user-agent='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'"], binary: ENV['GOOGLE_CHROME_SHIM'])
+    options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"])
 
     # session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" }
 
     driver = Selenium::WebDriver.for(:chrome, options: options)
     driver.get(site.url)
+    puts site.url
     puts driver.title
 
     width  = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth, 924);")
