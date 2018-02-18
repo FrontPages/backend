@@ -7,7 +7,7 @@ module Automator
 
   def self.aggregate_headlines_and_take_snapshot site, thumbnail = false
 
-    options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"])
+    options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36"], binary: ENV['GOOGLE_CHROME_SHIM'])
 
     # session.driver.headers = { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" }
 
