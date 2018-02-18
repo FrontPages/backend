@@ -50,7 +50,7 @@ end
 
 gem 'active_model_serializers'
 gem 'aws-sdk'
-gem 'pg'
+gem 'pg', '0.21.0'
 gem 'pg_search'
 gem 'poltergeist'
 gem 'responders', '~> 2.0'
