@@ -33,7 +33,7 @@ module Automator
     # Add some pixels on top of the calculated dimensions for good
     # measure to make the scroll bars disappear
     #
-    # driver.manage.window.resize_to(width+100, height+100)
+    driver.manage.window.resize_to(width+100, height+100)
 
     begin
       driver.execute_script(site.script) unless site.script.nil?
