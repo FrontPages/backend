@@ -3,11 +3,15 @@
 require 'selenium-webdriver'
 
 # Note that the user agent argument is necessary, at least for WaPo. Without it being set as a human user agent, the site doesn't bother loading any styles or images, so the screenshots look terrible.
-options = Selenium::WebDriver::Chrome::Options.new(args: ['headless', '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36'])
+options = Selenium::WebDriver::Chrome::Options.new()
+options.add_argument('--headless')
+options.add_argument('--verbose')
+options.add_argument('--disable-infobars')
+options.add_argument('--no-sandbox')
+options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36')
 
-driver = Selenium::WebDriver.for(:chrome, options: options)
+driver = Selenium::WebDriver.for(:chrome, options: options, :prefs => {:password_manager_enable => false, :credentials_enable_service => false})
 puts driver.execute_script('return navigator.userAgent')
-# driver.headers = { "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.106 Safari/537.36" }
 
 driver.get('http://wsj.com/')
 puts driver.title
