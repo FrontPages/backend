@@ -13,7 +13,7 @@ options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_
 driver = Selenium::WebDriver.for(:chrome, options: options, :prefs => {:password_manager_enable => false, :credentials_enable_service => false})
 puts driver.execute_script('return navigator.userAgent')
 
-driver.get('http://wsj.com/')
+driver.get('http://washingtonpost.com/')
 puts driver.title
 
 # driver.execute_script('function loopWithDelay() { setTimeout(function () { var scroll_depth = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop); if (scroll_depth > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
