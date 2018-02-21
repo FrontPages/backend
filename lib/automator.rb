@@ -11,8 +11,8 @@ module Automator
     options = Selenium::WebDriver::Chrome::Options.new(binary: ENV['GOOGLE_CHROME_SHIM'])
     options.add_argument('--headless')
     options.add_argument('--verbose')
-    # options.add_argument('--disable-infobars')
-    # options.add_argument('--no-sandbox')
+    options.add_argument('--disable-infobars')
+    options.add_argument('--no-sandbox')
     options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36')
 
     driver = Selenium::WebDriver.for(:chrome, options: options, :prefs => {:password_manager_enable => false, :credentials_enable_service => false})
@@ -43,8 +43,8 @@ module Automator
     puts "success"
 
     # These two lines seem to allow the page more time to load (on WaPo, at least), which results in the actual screenshot looking right instead of having a bunch of empty boxes
-    image_throwaway = nil
-    image_throwaway = driver.screenshot_as(:base64) if driver.screenshot_as(:base64).nil? == false
+    # image_throwaway = nil
+    # image_throwaway = driver.screenshot_as(:base64) if driver.screenshot_as(:base64).nil? == false
 
     snapshot_name = "#{site.shortcode}-#{ Time.now.strftime("%Y-%m-%d-%H-%M-%z") }.png"
     # driver.save_screenshot(snapshot_name)
