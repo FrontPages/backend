@@ -5,7 +5,18 @@ module Automator
   require 'net/http'
   require 'rmagick'
 
-  def self.aggregate_headlines_and_take_snapshot site, browser_height, thumbnail = false
+  def self.aggregate_headlines_and_take_snapshot site, options
+
+    defaults = {
+      min_browser_height: 668,
+      max_browser_width: 924,
+      scroll_entire_page: true,
+      sleep_min_time: 17,
+      run_custom_script: true,
+      save_thumbnail: true,
+      save_throwaway_image: false
+    }
+    settings = defaults.merge(options)
 
     # Note that the user agent argument is necessary, at least for WaPo. Without it being set as a human user agent, the site doesn't bother loading any styles or images, so the screenshots look terrible.
     options = Selenium::WebDriver::Chrome::Options.new(binary: ENV['GOOGLE_CHROME_SHIM'])
@@ -21,14 +32,16 @@ module Automator
     puts site.url
     puts driver.title
 
-    width  = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth, 924);")
-    height = driver.execute_script("return Math.min(Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight), #{browser_height});")
+    width  = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth, #{settings[:max_browser_width]});")
+    height = driver.execute_script("return Math.min(Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight), #{settings[:min_browser_height]});")
 
     puts "height: " + height.to_s
 
-    driver.execute_script('function loopWithDelay() { setTimeout(function () { var scroll_depth = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop); if (scroll_depth > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
+    if settings[:scroll_entire_page]
+      driver.execute_script('function loopWithDelay() { setTimeout(function () { var scroll_depth = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop); if (scroll_depth > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
+    end
 
-    sleep rand(17..24)
+    sleep rand(settings[:sleep_min_time]..(settings[:sleep_min_time] + 5))
 
     # Add some pixels on top of the calculated dimensions for good
     # measure to make the scroll bars disappear
@@ -36,15 +49,17 @@ module Automator
     driver.manage.window.resize_to(width+100, height+100)
 
     begin
-      driver.execute_script(site.script) unless site.script.nil?
+      driver.execute_script(site.script) unless site.script.nil? || settings[:run_custom_script] == false
     rescue
     end
 
     puts "success"
 
     # These two lines seem to allow the page more time to load (on WaPo, at least), which results in the actual screenshot looking right instead of having a bunch of empty boxes
-    # image_throwaway = nil
-    # image_throwaway = driver.screenshot_as(:base64) if driver.screenshot_as(:base64).nil? == false
+    if settings[:save_throwaway_image]
+      image_throwaway = nil
+      image_throwaway = driver.screenshot_as(:base64) if driver.screenshot_as(:base64).nil? == false
+    end
 
     snapshot_name = "#{site.shortcode}-#{ Time.now.strftime("%Y-%m-%d-%H-%M-%z") }.png"
     # driver.save_screenshot(snapshot_name)
@@ -72,7 +87,7 @@ module Automator
     obj.put(body: driver.page_source)
     obj.etag
 
-    if thumbnail
+    if settings[:save_thumbnail]
       new_snapshot = Snapshot.new :filename => snapshot_name, :thumbnail => ("thumb-" + snapshot_name), :site => site
     else
       new_snapshot = Snapshot.new :filename => snapshot_name, :site => site
