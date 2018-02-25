@@ -4,7 +4,7 @@ task :save_headlines_and_take_snapshot => :environment do
   sites = Site.all
 
   sites.each do |site|
-    Automator.aggregate_headlines_and_take_snapshot site, true
+    Automator.aggregate_headlines_and_take_snapshot site, 668, true
   end
 
 end
@@ -93,5 +93,21 @@ task :save_html => :environment do
   site = 'http://www.wsj.com/'
 
   Automator.save_html site
+
+end
+
+desc "Test rake task with argument"
+task :task_with_arg, [:arg] => [:environment] do |t, args|
+  puts "hey there " + args[:arg]
+end
+
+desc "This is a replacement for the live-in-production task that saves all headlines and takes a snapshot on all the site home pages"
+task :save_headlines_and_take_snapshot_with_height, [:height] => :environment do |t, args|
+
+  sites = Site.all
+
+  sites.each do |site|
+    Automator.aggregate_headlines_and_take_snapshot site, args[:height], true
+  end
 
 end

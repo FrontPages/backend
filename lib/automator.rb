@@ -5,7 +5,7 @@ module Automator
   require 'net/http'
   require 'rmagick'
 
-  def self.aggregate_headlines_and_take_snapshot site, thumbnail = false
+  def self.aggregate_headlines_and_take_snapshot site, browser_height, thumbnail = false
 
     # Note that the user agent argument is necessary, at least for WaPo. Without it being set as a human user agent, the site doesn't bother loading any styles or images, so the screenshots look terrible.
     options = Selenium::WebDriver::Chrome::Options.new(binary: ENV['GOOGLE_CHROME_SHIM'])
@@ -22,7 +22,7 @@ module Automator
     puts driver.title
 
     width  = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth, 924);")
-    height = driver.execute_script("return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight, 668);")
+    height = driver.execute_script("return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight, #{browser_height});")
 
     puts "height: " + height.to_s
 
