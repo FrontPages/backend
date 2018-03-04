@@ -31,6 +31,9 @@ module Automator
     driver = Selenium::WebDriver.for(:chrome, options: options, :prefs => {:password_manager_enable => false, :credentials_enable_service => false})
 
     driver.manage.window.resize_to(settings[:min_browser_width]+100, settings[:max_browser_height]+100) if settings[:presize_browser]
+    puts settings[:presize_browser].to_s
+    puts "presized height: " + settings[:max_browser_height].to_s
+    puts "presized width: " + settings[:min_browser_width].to_s
 
     puts driver.execute_script('return navigator.userAgent')
     driver.get(site.url)
