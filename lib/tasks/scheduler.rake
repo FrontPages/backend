@@ -97,17 +97,29 @@ task :save_html => :environment do
 end
 
 desc "Test rake task with argument"
-task :task_with_arg, [:arg] => [:environment] do |t, args|
-  puts "hey there " + args[:arg]
+task :task_with_env_variables => [:environment] do
+  puts ENV['TEST1']
 end
 
 desc "This is a replacement for the live-in-production task that saves all headlines and takes a snapshot on all the site home pages"
-task :save_headlines_and_take_snapshot_with_options, [:options] => :environment do |t, args|
+task :save_headlines_and_take_snapshot_with_options => :environment do
+
+  options = {
+    min_browser_height: ENV['MIN_BROWSER_HEIGHT'].to_i || 668,
+    max_browser_width: ENV['MAX_BROWSER_WIDTH'].to_i || 924,
+    scroll_entire_page: (ENV['SCROLL_ENTIRE_PAGE'] == 'true') || true,
+    sleep_min_time: ENV['SLEEP_MIN_TIME'].to_i || 17,
+    run_custom_script: (ENV['RUN_CUSTOM_SCRIPT'] == 'true') || true,
+    save_thumbnail: (ENV['SAVE_THUMBNAIL'] == 'true') || true,
+    save_throwaway_image: (ENV['SAVE_THROWAWAY_IMAGE'] == 'true') || false
+  }
+
+
 
   sites = Site.all
 
   sites.each do |site|
-    Automator.aggregate_headlines_and_take_snapshot site, args[:options]
+    Automator.aggregate_headlines_and_take_snapshot site, options
   end
 
 end
