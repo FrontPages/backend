@@ -8,8 +8,8 @@ module Automator
   def self.aggregate_headlines_and_take_snapshot site, options
 
     defaults = {
-      min_browser_height: 668,
-      max_browser_width: 924,
+      max_browser_height: 668,
+      min_browser_width: 924,
       scroll_entire_page: true,
       sleep_min_time: 17,
       run_custom_script: true,
@@ -32,8 +32,8 @@ module Automator
     puts site.url
     puts driver.title
 
-    width  = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth, #{settings[:max_browser_width]});")
-    height = driver.execute_script("return Math.min(Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight), #{settings[:min_browser_height]});")
+    width  = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth, #{settings[:min_browser_width]});")
+    height = driver.execute_script("return Math.min(Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight), #{settings[:max_browser_height]});")
 
     puts "height: " + height.to_s
 
@@ -69,7 +69,7 @@ module Automator
 
     images_arr = []
     images_arr << Base64.decode64(driver.screenshot_as(:base64))
-    images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob if thumbnail
+    images_arr << Magick::Image.from_blob(images_arr[0]).first.resize_to_fill(300,600,Magick::NorthWestGravity).to_blob if settings[:save_thumbnail]
 
     images_arr.each_with_index do |image, index|
 

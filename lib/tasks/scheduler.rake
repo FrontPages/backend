@@ -105,8 +105,8 @@ desc "This is a replacement for the live-in-production task that saves all headl
 task :save_headlines_and_take_snapshot_with_options => :environment do
 
   options = {
-    min_browser_height: ENV['MIN_BROWSER_HEIGHT'].to_i || 668,
-    max_browser_width: ENV['MAX_BROWSER_WIDTH'].to_i || 924,
+    max_browser_height: ENV['MAX_BROWSER_HEIGHT'].to_i || 668,
+    min_browser_width: ENV['MIN_BROWSER_WIDTH'].to_i || 924,
     scroll_entire_page: (ENV['SCROLL_ENTIRE_PAGE'] == 'true') || true,
     sleep_min_time: ENV['SLEEP_MIN_TIME'].to_i || 17,
     run_custom_script: (ENV['RUN_CUSTOM_SCRIPT'] == 'true') || true,
