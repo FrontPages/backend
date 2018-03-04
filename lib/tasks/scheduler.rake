@@ -112,7 +112,8 @@ task :save_headlines_and_take_snapshot_with_options => :environment do
     run_custom_script: (ENV['RUN_CUSTOM_SCRIPT'] == 'true') || true,
     save_thumbnail: (ENV['SAVE_THUMBNAIL'] == 'true') || true,
     save_throwaway_image: (ENV['SAVE_THROWAWAY_IMAGE'] == 'true') || false,
-    add_100px: (ENV['ADD_100PX'] == 'true') || false
+    add_100px: (ENV['ADD_100PX'] == 'true') || false,
+    presize_browser: (ENV['PRESIZE_BROWSER'] == 'true') || false
   }
 
 

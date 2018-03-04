@@ -15,7 +15,8 @@ module Automator
       run_custom_script: true,
       save_thumbnail: true,
       save_throwaway_image: false,
-      add_100px: false
+      add_100px: false,
+      presize_browser: false
     }
     settings = defaults.merge(options)
 
@@ -28,6 +29,9 @@ module Automator
     options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36')
 
     driver = Selenium::WebDriver.for(:chrome, options: options, :prefs => {:password_manager_enable => false, :credentials_enable_service => false})
+
+    driver.manage.window.resize_to(settings[:min_browser_width]+100, settings[:max_browser_height]+100) if settings[:presize_browser]
+
     puts driver.execute_script('return navigator.userAgent')
     driver.get(site.url)
     puts site.url
