@@ -105,18 +105,16 @@ desc "This is a replacement for the live-in-production task that saves all headl
 task :save_headlines_and_take_snapshot_with_options => :environment do
 
   options = {
-    max_browser_height: ENV['MAX_BROWSER_HEIGHT'].to_i || 668,
-    min_browser_width: ENV['MIN_BROWSER_WIDTH'].to_i || 924,
+    max_browser_height: (ENV['MAX_BROWSER_HEIGHT'] || 668).to_i,
+    min_browser_width: (ENV['MIN_BROWSER_WIDTH'] || 924).to_i,
     scroll_entire_page: (ENV['SCROLL_ENTIRE_PAGE'] == 'true') || true,
-    sleep_min_time: ENV['SLEEP_MIN_TIME'].to_i || 17,
+    sleep_min_time: (ENV['SLEEP_MIN_TIME'] || 17).to_i,
     run_custom_script: (ENV['RUN_CUSTOM_SCRIPT'] == 'true') || true,
     save_thumbnail: (ENV['SAVE_THUMBNAIL'] == 'true') || true,
     save_throwaway_image: (ENV['SAVE_THROWAWAY_IMAGE'] == 'true') || false,
     add_100px: (ENV['ADD_100PX'] == 'true') || false,
     presize_browser: (ENV['PRESIZE_BROWSER'] == 'true') || false
   }
-
-
 
   sites = Site.all
 
