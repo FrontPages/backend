@@ -111,7 +111,8 @@ task :save_headlines_and_take_snapshot_with_options => :environment do
     sleep_min_time: ENV['SLEEP_MIN_TIME'].to_i || 17,
     run_custom_script: (ENV['RUN_CUSTOM_SCRIPT'] == 'true') || true,
     save_thumbnail: (ENV['SAVE_THUMBNAIL'] == 'true') || true,
-    save_throwaway_image: (ENV['SAVE_THROWAWAY_IMAGE'] == 'true') || false
+    save_throwaway_image: (ENV['SAVE_THROWAWAY_IMAGE'] == 'true') || false,
+    add_100px: (ENV['ADD_100PX'] == 'true') || false
   }
 
 

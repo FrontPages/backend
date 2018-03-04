@@ -14,7 +14,8 @@ module Automator
       sleep_min_time: 17,
       run_custom_script: true,
       save_thumbnail: true,
-      save_throwaway_image: false
+      save_throwaway_image: false,
+      add_100px: false
     }
     settings = defaults.merge(options)
 
@@ -46,7 +47,7 @@ module Automator
     # Add some pixels on top of the calculated dimensions for good
     # measure to make the scroll bars disappear
     #
-    driver.manage.window.resize_to(width+100, height+100)
+    driver.manage.window.resize_to(width+100, height+100) if settings[:add_100px]
 
     begin
       driver.execute_script(site.script) unless site.script.nil? || settings[:run_custom_script] == false
