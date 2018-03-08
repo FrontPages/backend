@@ -25,7 +25,8 @@ module Automator
     options.add_argument('--headless')
     options.add_argument('--verbose')
     options.add_argument('--disable-infobars')
-    options.add_argument('--no-sandbox')
+    options.add_argument('--hide-scrollbars')
+    # options.add_argument('--no-sandbox')
     options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36')
 
     driver = Selenium::WebDriver.for(:chrome, options: options, :prefs => {:password_manager_enable => false, :credentials_enable_service => false})
@@ -46,7 +47,7 @@ module Automator
     puts "height: " + height.to_s
 
     if settings[:scroll_entire_page]
-      driver.execute_script('function loopWithDelay() { setTimeout(function () { var scroll_depth = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop); if (scroll_depth > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },1000); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
+      driver.execute_script('function loopWithDelay() { setTimeout(function () { var scroll_depth = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop); if (scroll_depth > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },700); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
     end
 
     sleep rand(settings[:sleep_min_time]..(settings[:sleep_min_time] + 5))
