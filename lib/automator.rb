@@ -26,7 +26,7 @@ module Automator
     options.add_argument('--verbose')
     options.add_argument('--disable-infobars')
     options.add_argument('--hide-scrollbars')
-    # options.add_argument('--no-sandbox')
+    options.add_argument('--no-sandbox')
     options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36')
 
     driver = Selenium::WebDriver.for(:chrome, options: options, :prefs => {:password_manager_enable => false, :credentials_enable_service => false})
