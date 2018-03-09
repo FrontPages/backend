@@ -644,6 +644,7 @@ GEM
       cliver (~> 0.3.1)
       websocket-driver (>= 0.2.0)
     public_suffix (3.0.2)
+    puma (3.11.3)
     rack (1.6.8)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -763,6 +764,7 @@ DEPENDENCIES
   pg (= 0.21.0)
   pg_search
   poltergeist
+  puma
   rails (~> 4.2.7.1)
   rails_12factor
   responders (~> 2.0)
