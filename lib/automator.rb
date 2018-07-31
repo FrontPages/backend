@@ -1,5 +1,7 @@
 module Automator
 
+# Adding comment line to have a new commit to redeploy to Elastic Beanstalk (wasn't working)
+
   require 'capybara/poltergeist'
   require 'selenium-webdriver'
   require 'net/http'
