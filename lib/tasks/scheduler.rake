@@ -123,3 +123,8 @@ task :save_headlines_and_take_snapshot_with_options => :environment do
   end
 
 end
+
+desc "Test rake task"
+task :test_task => [:environment] do
+  Automator.test_docker
+end

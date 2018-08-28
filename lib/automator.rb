@@ -274,4 +274,55 @@ module Automator
 
   end
 
+  def self.test_docker
+     defaults = {
+      max_browser_height: 668,
+      min_browser_width: 924,
+      scroll_entire_page: true,
+      sleep_min_time: 17,
+      run_custom_script: true,
+      save_thumbnail: true,
+      save_throwaway_image: false,
+      add_100px: false,
+      presize_browser: false
+    }
+    settings = defaults
+     # Note that the user agent argument is necessary, at least for WaPo. Without it being set as a human user agent, the site doesn't bother loading any styles or images, so the screenshots look terrible.
+    options = Selenium::WebDriver::Chrome::Options.new(binary: ENV['GOOGLE_CHROME_SHIM'])
+    options.add_argument('--headless')
+    options.add_argument('--verbose')
+    options.add_argument('--disable-infobars')
+    options.add_argument('--hide-scrollbars')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36')
+     driver = Selenium::WebDriver.for(:chrome, options: options, :prefs => {:password_manager_enable => false, :credentials_enable_service => false})
+     driver.manage.window.resize_to(settings[:min_browser_width]+100, settings[:max_browser_height]+100) if settings[:presize_browser]
+    puts settings[:presize_browser].to_s
+    puts "presized height: " + settings[:max_browser_height].to_s
+    puts "presized width: " + settings[:min_browser_width].to_s
+     puts driver.execute_script('return navigator.userAgent')
+    driver.get("https://www.nytimes.com/")
+    puts driver.title
+     width  = driver.execute_script("return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, document.documentElement.scrollWidth, document.documentElement.offsetWidth, #{settings[:min_browser_width]});")
+    height = driver.execute_script("return Math.min(Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight), #{settings[:max_browser_height]});")
+     puts "height: " + height.to_s
+     if settings[:scroll_entire_page]
+      driver.execute_script('function loopWithDelay() { setTimeout(function () { var scroll_depth = Math.max(window.pageYOffset, document.documentElement.scrollTop, document.body.scrollTop); if (scroll_depth > 1024) { window.scrollBy(0,-1024); loopWithDelay(); } else { window.scrollTo(0,0); return; } },700); }; window.scrollTo(0,document.body.scrollHeight); loopWithDelay();')
+    end
+     sleep 5
+     # Add some pixels on top of the calculated dimensions for good
+    # measure to make the scroll bars disappear
+    #
+    driver.manage.window.resize_to(width+100, height+100) if settings[:add_100px]
+     puts "success"
+     # These two lines seem to allow the page more time to load (on WaPo, at least), which results in the actual screenshot looking right instead of having a bunch of empty boxes
+    if settings[:save_throwaway_image]
+      image_throwaway = nil
+      image_throwaway = driver.screenshot_as(:base64) if driver.screenshot_as(:base64).nil? == false
+    end
+     snapshot_name = "#{site.shortcode}-#{ Time.now.strftime("%Y-%m-%d-%H-%M-%z") }.png"
+    # driver.save_screenshot(snapshot_name)
+     driver.quit
+   end
+
 end
