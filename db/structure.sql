@@ -2,33 +2,18 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.7
--- Dumped by pg_dump version 10.2
+-- Dumped from database version 11.5
+-- Dumped by pg_dump version 11.2
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
-
---
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
-SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
 
@@ -38,7 +23,7 @@ SET default_with_oids = false;
 -- Name: collection_snapshots; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE collection_snapshots (
+CREATE TABLE public.collection_snapshots (
     id integer NOT NULL,
     collection_id integer,
     snapshot_id integer,
@@ -51,7 +36,8 @@ CREATE TABLE collection_snapshots (
 -- Name: collection_snapshots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE collection_snapshots_id_seq
+CREATE SEQUENCE public.collection_snapshots_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -63,14 +49,14 @@ CREATE SEQUENCE collection_snapshots_id_seq
 -- Name: collection_snapshots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE collection_snapshots_id_seq OWNED BY collection_snapshots.id;
+ALTER SEQUENCE public.collection_snapshots_id_seq OWNED BY public.collection_snapshots.id;
 
 
 --
 -- Name: collections; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE collections (
+CREATE TABLE public.collections (
     id integer NOT NULL,
     title character varying,
     subtitle character varying,
@@ -84,7 +70,8 @@ CREATE TABLE collections (
 -- Name: collections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE collections_id_seq
+CREATE SEQUENCE public.collections_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -96,14 +83,14 @@ CREATE SEQUENCE collections_id_seq
 -- Name: collections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE collections_id_seq OWNED BY collections.id;
+ALTER SEQUENCE public.collections_id_seq OWNED BY public.collections.id;
 
 
 --
 -- Name: headlines; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE headlines (
+CREATE TABLE public.headlines (
     id integer NOT NULL,
     title character varying,
     url character varying,
@@ -118,7 +105,8 @@ CREATE TABLE headlines (
 -- Name: headlines_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE headlines_id_seq
+CREATE SEQUENCE public.headlines_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -130,14 +118,14 @@ CREATE SEQUENCE headlines_id_seq
 -- Name: headlines_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE headlines_id_seq OWNED BY headlines.id;
+ALTER SEQUENCE public.headlines_id_seq OWNED BY public.headlines.id;
 
 
 --
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE schema_migrations (
+CREATE TABLE public.schema_migrations (
     version character varying NOT NULL
 );
 
@@ -146,7 +134,7 @@ CREATE TABLE schema_migrations (
 -- Name: sites; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE sites (
+CREATE TABLE public.sites (
     id integer NOT NULL,
     name character varying,
     url character varying,
@@ -162,7 +150,8 @@ CREATE TABLE sites (
 -- Name: sites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE sites_id_seq
+CREATE SEQUENCE public.sites_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -174,14 +163,14 @@ CREATE SEQUENCE sites_id_seq
 -- Name: sites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE sites_id_seq OWNED BY sites.id;
+ALTER SEQUENCE public.sites_id_seq OWNED BY public.sites.id;
 
 
 --
 -- Name: snapshots; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE snapshots (
+CREATE TABLE public.snapshots (
     id integer NOT NULL,
     filename character varying,
     height integer,
@@ -200,7 +189,8 @@ CREATE TABLE snapshots (
 -- Name: snapshots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE snapshots_id_seq
+CREATE SEQUENCE public.snapshots_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -212,14 +202,14 @@ CREATE SEQUENCE snapshots_id_seq
 -- Name: snapshots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE snapshots_id_seq OWNED BY snapshots.id;
+ALTER SEQUENCE public.snapshots_id_seq OWNED BY public.snapshots.id;
 
 
 --
 -- Name: stories; Type: TABLE; Schema: public; Owner: -
 --
 
-CREATE TABLE stories (
+CREATE TABLE public.stories (
     id integer NOT NULL,
     url character varying,
     site_id integer,
@@ -232,7 +222,8 @@ CREATE TABLE stories (
 -- Name: stories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE stories_id_seq
+CREATE SEQUENCE public.stories_id_seq
+    AS integer
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -244,56 +235,56 @@ CREATE SEQUENCE stories_id_seq
 -- Name: stories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE stories_id_seq OWNED BY stories.id;
+ALTER SEQUENCE public.stories_id_seq OWNED BY public.stories.id;
 
 
 --
 -- Name: collection_snapshots id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collection_snapshots ALTER COLUMN id SET DEFAULT nextval('collection_snapshots_id_seq'::regclass);
+ALTER TABLE ONLY public.collection_snapshots ALTER COLUMN id SET DEFAULT nextval('public.collection_snapshots_id_seq'::regclass);
 
 
 --
 -- Name: collections id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collections ALTER COLUMN id SET DEFAULT nextval('collections_id_seq'::regclass);
+ALTER TABLE ONLY public.collections ALTER COLUMN id SET DEFAULT nextval('public.collections_id_seq'::regclass);
 
 
 --
 -- Name: headlines id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY headlines ALTER COLUMN id SET DEFAULT nextval('headlines_id_seq'::regclass);
+ALTER TABLE ONLY public.headlines ALTER COLUMN id SET DEFAULT nextval('public.headlines_id_seq'::regclass);
 
 
 --
 -- Name: sites id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sites ALTER COLUMN id SET DEFAULT nextval('sites_id_seq'::regclass);
+ALTER TABLE ONLY public.sites ALTER COLUMN id SET DEFAULT nextval('public.sites_id_seq'::regclass);
 
 
 --
 -- Name: snapshots id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY snapshots ALTER COLUMN id SET DEFAULT nextval('snapshots_id_seq'::regclass);
+ALTER TABLE ONLY public.snapshots ALTER COLUMN id SET DEFAULT nextval('public.snapshots_id_seq'::regclass);
 
 
 --
 -- Name: stories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stories ALTER COLUMN id SET DEFAULT nextval('stories_id_seq'::regclass);
+ALTER TABLE ONLY public.stories ALTER COLUMN id SET DEFAULT nextval('public.stories_id_seq'::regclass);
 
 
 --
 -- Name: collection_snapshots collection_snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collection_snapshots
+ALTER TABLE ONLY public.collection_snapshots
     ADD CONSTRAINT collection_snapshots_pkey PRIMARY KEY (id);
 
 
@@ -301,7 +292,7 @@ ALTER TABLE ONLY collection_snapshots
 -- Name: collections collections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collections
+ALTER TABLE ONLY public.collections
     ADD CONSTRAINT collections_pkey PRIMARY KEY (id);
 
 
@@ -309,7 +300,7 @@ ALTER TABLE ONLY collections
 -- Name: headlines headlines_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY headlines
+ALTER TABLE ONLY public.headlines
     ADD CONSTRAINT headlines_pkey PRIMARY KEY (id);
 
 
@@ -317,7 +308,7 @@ ALTER TABLE ONLY headlines
 -- Name: sites sites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY sites
+ALTER TABLE ONLY public.sites
     ADD CONSTRAINT sites_pkey PRIMARY KEY (id);
 
 
@@ -325,7 +316,7 @@ ALTER TABLE ONLY sites
 -- Name: snapshots snapshots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY snapshots
+ALTER TABLE ONLY public.snapshots
     ADD CONSTRAINT snapshots_pkey PRIMARY KEY (id);
 
 
@@ -333,7 +324,7 @@ ALTER TABLE ONLY snapshots
 -- Name: stories stories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stories
+ALTER TABLE ONLY public.stories
     ADD CONSTRAINT stories_pkey PRIMARY KEY (id);
 
 
@@ -341,101 +332,101 @@ ALTER TABLE ONLY stories
 -- Name: index_collection_snapshots_on_collection_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_collection_snapshots_on_collection_id ON collection_snapshots USING btree (collection_id);
+CREATE INDEX index_collection_snapshots_on_collection_id ON public.collection_snapshots USING btree (collection_id);
 
 
 --
 -- Name: index_collection_snapshots_on_snapshot_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_collection_snapshots_on_snapshot_id ON collection_snapshots USING btree (snapshot_id);
+CREATE INDEX index_collection_snapshots_on_snapshot_id ON public.collection_snapshots USING btree (snapshot_id);
 
 
 --
 -- Name: index_collections_on_permalink; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_collections_on_permalink ON collections USING btree (permalink);
+CREATE UNIQUE INDEX index_collections_on_permalink ON public.collections USING btree (permalink);
 
 
 --
 -- Name: index_headlines_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_headlines_on_created_at ON headlines USING btree (created_at);
+CREATE INDEX index_headlines_on_created_at ON public.headlines USING btree (created_at);
 
 
 --
 -- Name: index_headlines_on_snapshot_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_headlines_on_snapshot_id ON headlines USING btree (snapshot_id);
+CREATE INDEX index_headlines_on_snapshot_id ON public.headlines USING btree (snapshot_id);
 
 
 --
 -- Name: index_headlines_on_story_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_headlines_on_story_id ON headlines USING btree (story_id);
+CREATE INDEX index_headlines_on_story_id ON public.headlines USING btree (story_id);
 
 
 --
 -- Name: index_on_title; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_on_title ON headlines USING gin (to_tsvector('english'::regconfig, COALESCE((title)::text, ''::text)));
+CREATE INDEX index_on_title ON public.headlines USING gin (to_tsvector('english'::regconfig, COALESCE((title)::text, ''::text)));
 
 
 --
 -- Name: index_snapshots_on_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_snapshots_on_created_at ON snapshots USING btree (created_at DESC) WHERE (keyframe = true);
+CREATE INDEX index_snapshots_on_created_at ON public.snapshots USING btree (created_at DESC) WHERE (keyframe = true);
 
 
 --
 -- Name: index_snapshots_on_site_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_snapshots_on_site_id ON snapshots USING btree (site_id);
+CREATE INDEX index_snapshots_on_site_id ON public.snapshots USING btree (site_id);
 
 
 --
 -- Name: index_stories_on_site_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_stories_on_site_id ON stories USING btree (site_id);
+CREATE INDEX index_stories_on_site_id ON public.stories USING btree (site_id);
 
 
 --
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
+CREATE UNIQUE INDEX unique_schema_migrations ON public.schema_migrations USING btree (version);
 
 
 --
 -- Name: stories fk_rails_19e4328475; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY stories
-    ADD CONSTRAINT fk_rails_19e4328475 FOREIGN KEY (site_id) REFERENCES sites(id);
+ALTER TABLE ONLY public.stories
+    ADD CONSTRAINT fk_rails_19e4328475 FOREIGN KEY (site_id) REFERENCES public.sites(id);
 
 
 --
 -- Name: collection_snapshots fk_rails_2aa8ac3134; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collection_snapshots
-    ADD CONSTRAINT fk_rails_2aa8ac3134 FOREIGN KEY (snapshot_id) REFERENCES snapshots(id);
+ALTER TABLE ONLY public.collection_snapshots
+    ADD CONSTRAINT fk_rails_2aa8ac3134 FOREIGN KEY (snapshot_id) REFERENCES public.snapshots(id);
 
 
 --
 -- Name: collection_snapshots fk_rails_da6ee373ec; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY collection_snapshots
-    ADD CONSTRAINT fk_rails_da6ee373ec FOREIGN KEY (collection_id) REFERENCES collections(id);
+ALTER TABLE ONLY public.collection_snapshots
+    ADD CONSTRAINT fk_rails_da6ee373ec FOREIGN KEY (collection_id) REFERENCES public.collections(id);
 
 
 --

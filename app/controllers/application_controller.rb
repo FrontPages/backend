@@ -7,4 +7,8 @@ class ApplicationController < ActionController::Base
     headers['Access-Control-Allow-Origin'] = '*'
   end
 
+  def check_api_key
+    head :unauthorized unless params[:api_key] == ENV['FRONT_PAGES_API_KEY']
+  end
+
 end

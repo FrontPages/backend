@@ -10,4 +10,6 @@ Rails.application.routes.draw do
 
   get "snapshots/search", to: "snapshots#search"
 
+  post "snapshots/create", to: "snapshots#create"
+
 end
