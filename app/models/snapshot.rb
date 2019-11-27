@@ -5,12 +5,8 @@ class Snapshot < ActiveRecord::Base
   has_many :collection_snapshots
   has_many :collections, through: :collection_snapshots
 
-  def file_path
+  def filename_s3
     # gsub is required due to Amazon S3 encoding glitch: https://bugs.launchpad.net/ubuntu/+source/apt/+bug/1003633
-    unless thumbnail.nil?
-      ENV['S3_FILE_PREFIX'] + thumbnail.gsub("+", "%2B")
-    else
-      ENV['S3_FILE_PREFIX'] + filename.gsub("+", "%2B")
-    end
+    filename.gsub("+", "%2B")
   end
 end
