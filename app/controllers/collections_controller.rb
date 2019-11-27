@@ -1,6 +1,7 @@
 class CollectionsController < ApplicationController
   before_filter :make_api_public, only: [:index, :show]
   respond_to :json
+  respond_to :html, only: :show
 
   def index
     collections = Collection.all.order(id: :asc)
@@ -8,8 +9,13 @@ class CollectionsController < ApplicationController
   end
 
   def show
-    collection = Collection.where(permalink: params[:permalink]).order(id: :asc)
-    render json: collection, each_serializer: CollectionSerializer
+    @collection = Collection.find_by_permalink(params[:permalink])
+    respond_to do |format|
+      format.html
+      format.json {
+        render json: @collection, each_serializer: CollectionSerializer
+      }
+    end
   end
 
   def create
