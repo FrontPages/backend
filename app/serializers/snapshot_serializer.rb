@@ -1,3 +1,3 @@
 class SnapshotSerializer < ActiveModel::Serializer
-  attributes :created_at, :file_path, :id, :site_id
+  attributes :created_at, :filename_s3, :id, :site_id
 end
