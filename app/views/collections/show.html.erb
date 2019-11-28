@@ -4,3 +4,6 @@
 <h4>
   <%= @collection.subtitle %>
 </h4>
+<% @collection.snapshots.each do |snapshot| %>
+  <%= image_tag snapshot.filename_s3 %>
+<% end %>
