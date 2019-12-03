@@ -52,6 +52,7 @@ class SnapshotsController < ApplicationController
 
     end
 
+    render json: new_snapshot, serializer: SnapshotSerializer
   end
 
   private
