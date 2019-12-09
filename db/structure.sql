@@ -399,6 +399,13 @@ CREATE INDEX index_stories_on_site_id ON public.stories USING btree (site_id);
 
 
 --
+-- Name: index_stories_on_url; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_stories_on_url ON public.stories USING btree (url);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -466,4 +473,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160204193416');
 INSERT INTO schema_migrations (version) VALUES ('20160206223500');
 
 INSERT INTO schema_migrations (version) VALUES ('20160207165941');
+
+INSERT INTO schema_migrations (version) VALUES ('20191209112407');
 
