@@ -1,17 +1,17 @@
 class SnapshotsController < ApplicationController
-	protect_from_forgery with: :null_session
-	before_filter :make_api_public, only: [:index, :search, :create]
-	before_filter :check_api_key, only: [:create]
-	respond_to :json
+  protect_from_forgery with: :null_session
+  before_filter :make_api_public, only: [:index, :search, :create]
+  before_filter :check_api_key, only: [:create]
+  respond_to :json
 
-	def index
-		if params.has_key?(:limit)
-			snapshots = Snapshot.where(keyframe: true, site_id: params[:site_id]).order(created_at: :desc).limit(params[:limit].to_i)
-		else
-			snapshots = Snapshot.where(keyframe: true, site_id: params[:site_id]).order(created_at: :desc)
-		end
-		render json: snapshots, each_serializer: SnapshotSerializer
-	end
+  def index
+    if params.has_key?(:limit)
+      snapshots = Snapshot.where(keyframe: true, site_id: params[:site_id]).order(created_at: :desc).limit(params[:limit].to_i)
+    else
+      snapshots = Snapshot.where(keyframe: true, site_id: params[:site_id]).order(created_at: :desc)
+    end
+    render json: snapshots, each_serializer: SnapshotSerializer
+  end
 
   def search
     if params.has_key?(:no_index)
@@ -22,7 +22,7 @@ class SnapshotsController < ApplicationController
     render json: snapshots, each_serializer: SnapshotSerializer
   end
 
-	def create
+  def create
     new_snapshot = Snapshot.new :filename => snapshot_params[:filename], :thumbnail => snapshot_params[:thumbnail], :site_id => snapshot_params[:site_id]
     new_snapshot.save
 
@@ -52,13 +52,14 @@ class SnapshotsController < ApplicationController
 
     end
 
-	end
+    render json: new_snapshot, serializer: SnapshotSerializer
+  end
 
-	private
+  private
 
-	def snapshot_params
-		params.require(:api_key)
-		params.require(:snapshot).permit(:site_id, :filename, :thumbnail, :headlines => [:title, :url])
-	end
+  def snapshot_params
+    params.require(:api_key)
+    params.require(:snapshot).permit(:site_id, :filename, :thumbnail, :headlines => [:title, :url])
+  end
 
 end
