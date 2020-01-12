@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.6.5'
 
-gem 'puma'
+gem "puma", ">= 4.3.1"
 gem 'rails', '~> 4.2.8'
 
 group :development, :test do
@@ -28,3 +28,5 @@ gem 'pg', '0.21.0'
 gem 'pg_search'
 gem 'poltergeist'
 gem 'responders', '~> 2.0'
+
+gem "rack", ">= 1.6.12"
