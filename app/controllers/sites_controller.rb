@@ -1,6 +1,6 @@
 class SitesController < ApplicationController
 
-	before_filter :make_api_public, only: [:index]
+	before_action :make_api_public, only: [:index]
 
 	respond_to :json
 

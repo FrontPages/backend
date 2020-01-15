@@ -1,5 +1,5 @@
 class CollectionsController < ApplicationController
-  before_filter :make_api_public, only: [:index, :show]
+  before_action :make_api_public, only: [:index, :show]
   respond_to :json
 
   def index

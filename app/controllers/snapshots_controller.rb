@@ -1,7 +1,7 @@
 class SnapshotsController < ApplicationController
   protect_from_forgery with: :null_session
-  before_filter :make_api_public, only: [:index, :search, :create]
-  before_filter :check_api_key, only: [:create]
+  before_action :make_api_public, only: [:index, :search, :create]
+  before_action :check_api_key, only: [:create]
   respond_to :json
 
   def index

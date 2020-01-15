@@ -1,6 +1,6 @@
 class StoriesController < ApplicationController
 
-	before_filter :make_api_public, only: [:trending]
+	before_action :make_api_public, only: [:trending]
 
 	respond_to :json
 
